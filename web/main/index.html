@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/three.js/0.146.0/three.min.js"></script>
+  <link href="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
+
+  <title>snow ski</title>
+
+
+  <style type="text/css">
+    /*左下角*/
+    div.left_bottom {
+      background: #1a59b7;
+      color: #ffffff;
+      overflow: hidden;
+      z-index: 9999;
+      position: fixed;
+      padding: 5px;
+      text-align: center;
+      width: 175px;
+      height: 300px;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      left: 10px;
+      bottom: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="left_bottom">
+    <p>足部压力传感器</p>
+    <table border="1">
+      <tr>
+        <td id="yl-l-1">0</td>
+        <td id="yl-l-2">0</td>
+        <td id="yl-r-1">0</td>
+        <td id="yl-r-2">0</td>
+      </tr>
+      <tr>
+        <td id="yl-l-3">0</td>
+        <td id="yl-l-4">0</td>
+        <td id="yl-r-3">0</td>
+        <td id="yl-r-4">0</td>
+      </tr>
+      <tr>
+        <td id="yl-l-5">0</td>
+        <td id="yl-l-6">0</td>
+        <td id="yl-r-5">0</td>
+        <td id="yl-r-6">0</td>
+      </tr>
+      <tr>
+        <td id="yl-l-7">0</td>
+        <td id="yl-l-8">0</td>
+        <td id="yl-r-7">0</td>
+        <td id="yl-r-8">0</td>
+      </tr>
+      <tr>
+        <td id="yl-l-9">0</td>
+        <td id="yl-l-10">0</td>
+        <td id="yl-r-9">0</td>
+        <td id="yl-r-10">0</td>
+      </tr>
+      <tr>
+        <td id="yl-l-11">0</td>
+        <td id="yl-l-12">0</td>
+        <td id="yl-r-11">0</td>
+        <td id="yl-r-12">0</td>
+      </tr>
+    </table>
+
+
+  </div>
+  <div class="mdui-fab-wrapper" id="fab">
+    <button class="mdui-fab mdui-ripple mdui-color-pink-accent">
+      <i class="mdui-icon material-icons">add</i>
+      <i class="mdui-icon mdui-fab-opened material-icons">mode_edit</i>
+    </button>
+    <div class="mdui-fab-dial">
+      <button class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-pink" onclick="play_it()">
+        <i class="mdui-icon material-icons">play_arrow</i>
+      </button>
+      <button class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-red">
+        <i class="mdui-icon material-icons">stop</i>
+      </button>
+      <button class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-blue">
+        <i class="mdui-icon material-icons">stop</i>
+      </button>
+    </div>
+  </div>
+
+
+  <script>
+
+    mm = { "t": [0, 0, 0], "l": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "r": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+
+    /**
+     * 创建场景对象Scene
+     */
+    var scene = new THREE.Scene();
+    /**
+     * 创建网格模型
+     */
+    // var geometry = new THREE.SphereGeometry(60, 40, 40); //创建一个球体几何对象
+    var geometry = new THREE.BoxGeometry(60, 10, 100); //创建一个立方体几何对象Geometry
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xf0f0f0
+    }); //材质对象Material
+    var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+    scene.add(mesh); //网格模型添加到场景中
+
+    var loca_url = "ws://" + window.location.host + "/ws";
+    // 打开一个 web socket
+    var ws = new WebSocket(loca_url);
+
+    ws.onopen = function () {
+      // Web Socket 已连接上，使用 send() 方法发送数据
+    };
+
+    ws.onmessage = function (evt) {
+      var received_msg = evt.data;
+      try {
+        mm = JSON.parse(received_msg);
+        mesh.rotateX(Math.PI * mm['t'][0]);
+        mesh.rotateY(Math.PI * mm['t'][1]);
+        mesh.rotateZ(Math.PI * mm['t'][2]);
+        document.getElementById("yl-l-1").innerHTML = mm['l'][0];
+        document.getElementById("yl-l-2").innerHTML = mm['l'][1];
+        document.getElementById("yl-l-3").innerHTML = mm['l'][2];
+        document.getElementById("yl-l-4").innerHTML = mm['l'][3];
+        document.getElementById("yl-l-5").innerHTML = mm['l'][4];
+        document.getElementById("yl-l-6").innerHTML = mm['l'][5];
+        document.getElementById("yl-l-7").innerHTML = mm['l'][6];
+        document.getElementById("yl-l-8").innerHTML = mm['l'][7];
+        document.getElementById("yl-l-9").innerHTML = mm['l'][8];
+        document.getElementById("yl-l-10").innerHTML = mm['l'][9];
+        document.getElementById("yl-l-11").innerHTML = mm['l'][10];
+        document.getElementById("yl-l-12").innerHTML = mm['l'][11];
+        document.getElementById("yl-r-1").innerHTML = mm['r'][0];
+        document.getElementById("yl-r-2").innerHTML = mm['r'][1];
+        document.getElementById("yl-r-3").innerHTML = mm['r'][2];
+        document.getElementById("yl-r-4").innerHTML = mm['r'][3];
+        document.getElementById("yl-r-5").innerHTML = mm['r'][4];
+        document.getElementById("yl-r-6").innerHTML = mm['r'][5];
+        document.getElementById("yl-r-7").innerHTML = mm['r'][6];
+        document.getElementById("yl-r-8").innerHTML = mm['r'][7];
+        document.getElementById("yl-r-9").innerHTML = mm['r'][8];
+        document.getElementById("yl-r-10").innerHTML = mm['r'][9];
+        document.getElementById("yl-r-11").innerHTML = mm['r'][10];
+        document.getElementById("yl-r-12").innerHTML = mm['r'][11];
+      }
+      catch (e) {
+        console.err(e);
+        //返回默认对象，或根据用例返回null。
+      }
+    };
+
+    ws.onclose = function () {
+      // 关闭 websocket
+      alert("连接已关闭");
+    }
+
+    /**
+     * 光源设置
+     */
+    //点光源
+    var point = new THREE.PointLight(0xffffff);
+    point.position.set(400, 200, 300); //点光源位置
+    scene.add(point); //点光源添加到场景中
+    //环境光
+    var ambient = new THREE.AmbientLight(0x444444);
+    scene.add(ambient);
+    /**
+     * 相机设置
+     */
+    var width = window.innerWidth; //窗口宽度
+    var height = window.innerHeight; //窗口高度
+    var k = width / height; //窗口宽高比
+    var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
+    //创建相机对象
+    var camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+    camera.position.set(70, 300, 200); //设置相机位置
+    camera.lookAt(scene.position); //设置相机方向(指向的场景对象)
+    /**
+     * 创建渲染器对象
+     */
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(width, height);//设置渲染区域尺寸
+    renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+    document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
+    //执行渲染操作   指定场景、相机作为参数
+    renderer.render(scene, camera);
+
+    function play_it() {
+      document.getElementById("yl-r-12").disabled = true
+    }
+  </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
+  <script>
+    var $ = mdui.$;
+    var inst = new mdui.Fab('#fab');
+
+    $('#fab').on('open.mdui.fab', function () {
+    });
+
+    $('#fab').on('opened.mdui.fab', function () {
+    });
+
+    $('#fab').on('close.mdui.fab', function () {
+    });
+
+    $('#fab').on('closed.mdui.fab', function () {
+    });
+  </script>
+</body>
+
+</html>
