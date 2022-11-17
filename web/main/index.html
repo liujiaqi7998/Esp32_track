@@ -131,9 +131,9 @@
       var received_msg = evt.data;
       try {
         mm = JSON.parse(received_msg);
-        mesh.rotateX(Math.PI * mm['t'][0]);
-        mesh.rotateY(Math.PI * mm['t'][1]);
-        mesh.rotateZ(Math.PI * mm['t'][2]);
+        mesh.rotateX(Math.PI * -mm['t'][1]*0.05);
+        mesh.rotateY(Math.PI * mm['t'][2]*0.05);
+        mesh.rotateZ(Math.PI * -mm['t'][0]*0.05);
         document.getElementById("yl-l-1").innerHTML = mm['l'][0];
         document.getElementById("yl-l-2").innerHTML = mm['l'][1];
         document.getElementById("yl-l-3").innerHTML = mm['l'][2];
@@ -158,6 +158,7 @@
         document.getElementById("yl-r-10").innerHTML = mm['r'][9];
         document.getElementById("yl-r-11").innerHTML = mm['r'][10];
         document.getElementById("yl-r-12").innerHTML = mm['r'][11];
+        renderer.render(scene, camera);
       }
       catch (e) {
         console.err(e);
@@ -202,7 +203,7 @@
     renderer.render(scene, camera);
 
     function play_it() {
-      document.getElementById("yl-r-12").disabled = true
+      
     }
   </script>
   <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
